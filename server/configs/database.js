@@ -8,7 +8,7 @@ const dbconfig = {
     password: 'cnoGJC76',
     database:'ndajobv2',
     ssl: {
-        ca: fs.readFileSync('./DigiCertGlobalRootCA.crt.pem')
+        ca: fs.readFileSync('../DigiCertGlobalRootCA.crt.pem')
     }
 };
 
