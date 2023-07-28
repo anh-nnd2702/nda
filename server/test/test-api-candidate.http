@@ -1,0 +1,124 @@
+//--------------API ứng viên 
+### đăng ký
+POST http://localhost:4000/candidate/signUp
+Content-Type: application/json
+
+{
+    "fullName":"Đức Anh 13",
+    "email":"da13@gmail.com",
+    "password":"hello13"
+}
+
+### đăng nhập
+
+POST http://localhost:4000/candidate/login
+Content-Type: application/json
+
+{
+    "email":"betran123@gmail.com",
+    "password":"hello123"
+}
+
+### sửa thông tin
+PUT http://localhost:4000/candidate/
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODUyNjU5NX0.anCo9LWSmUnMzMPpeofqLu0zdb5aMoIp1hilay25k-U
+Content-Type: application/json
+
+{
+    "fullName":"Nguyễn Bá Học",
+    "phoneNumber":"0123455789",
+    "cityId":"50",
+    "gender":"1",
+    "dateOfBirth":"20-10-1999",
+    "isSeeking":"true",
+    "isAcceptEmail":"false",
+    "minWage":"2"
+}
+### Xem avatar
+GET http://localhost:4000/candidate/avatar
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4OTA4Mjg2M30.8ELyAtR5JIjzYrzXHZzKsPduObw6az2ZWGD-g7Thth0
+Content-Type: application/json
+
+
+### Lấy thông tin candidate
+GET http://localhost:4000/candidate
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODUyNjU5NX0.anCo9LWSmUnMzMPpeofqLu0zdb5aMoIp1hilay25k-U
+Content-Type: application/json
+
+### Lấy tất cả cv của candidate
+GET http://localhost:4000/candidate/cv
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODcyMjE0NX0.HHx2pSLf7INsatZ3E00UYa054JDOc8nx87inpv0rviQ
+Content-Type: application/json
+
+### lấy ra 1 cv theo id
+GET http://localhost:4000/cv/24
+Content-Type: application/json
+
+
+### Tạo Cv cho candidate
+POST http://localhost:4000/cv
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODcwMjc2M30.JHn18aU8nOvNBztmVfrTL1c_zAa2o86dvqkCoj-AqDk
+Content-Type: application/json
+
+{
+    
+}
+
+### sửa cv
+PUT http://localhost:4000/cv/7
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODcwMjc2M30.JHn18aU8nOvNBztmVfrTL1c_zAa2o86dvqkCoj-AqDk
+Content-Type: application/json
+
+{
+    "cvImgUrl":"https://res.cloudinary.com/dbnxld9bg/image/upload/v1689050182/datn-nda/kocawqboynqmjwsv6mso.png",
+    "gender":1,
+    "dateOfBirth":"2000-02-27"
+}
+
+### Xóa Cv
+DELETE http://localhost:4000/cv/20
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4OTU2NzU1Mn0.2-8pIkKsmynqWtztjhT6WyT5jRy30wo1sma_vaD8Mkk
+Content-Type: application/json
+
+### set Cv là main Cv
+PUT http://localhost:4000/cv/mainCv/7
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODcyMjE0NX0.HHx2pSLf7INsatZ3E00UYa054JDOc8nx87inpv0rviQ
+Content-Type: application/json
+
+### save job
+POST http://localhost:4000/candidate/saveJob
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODg3MzE5OX0.cSAhSnlf19ZM69MmzAPcoe0xcxeoSZpIncx33mDVKCg
+Content-Type: application/json
+
+{
+    "jobId":"3"
+}
+
+### unsave job
+DELETE http://localhost:4000/candidate/savedJob/9
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODg3MzE5OX0.cSAhSnlf19ZM69MmzAPcoe0xcxeoSZpIncx33mDVKCg
+Content-Type: application/json
+
+### get saved job by jobId
+GET http://localhost:4000/candidate/saved/job/8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODg3MzE5OX0.cSAhSnlf19ZM69MmzAPcoe0xcxeoSZpIncx33mDVKCg
+Content-Type: application/json
+
+### get all saved job by candidate
+GET http://localhost:4000/candidate/savedJob
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODg3MzE5OX0.cSAhSnlf19ZM69MmzAPcoe0xcxeoSZpIncx33mDVKCg
+Content-Type: application/json
+
+### lấy candidate avatar:
+GET http://localhost:4000/candidate/avatar
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4OTA0OTg2N30.Px-EO9y_nGrpW44N8FY7TwDCQfGgSiXgJhGrhMNkNxM
+Content-Type: application/json
+
+### report job:
+POST  http://localhost:4000/report/6
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4OTA0OTg2N30.Px-EO9y_nGrpW44N8FY7TwDCQfGgSiXgJhGrhMNkNxM
+Content-Type: application/json
+
+{
+    "reportDescribe":"tin này lừa đảo"
+}

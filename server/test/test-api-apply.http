@@ -1,0 +1,40 @@
+///api reference
+GET http://localhost:4000/reference/
+
+/// api ứng tuyển
+### tạo ứng tuyển mới:
+POST http://localhost:4000/apply
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODgzMDc1M30.2TKvH3J-lz88uBLgdjU5Y8n4J3g03wpawP2l7yAjcVQ
+Content-Type: application/json
+
+{
+    "jobId":"3",
+    "cvId":"8",
+    "coverLetter":"em giỏi lắm hãy nhận em đi"
+}
+
+### xem tất cả ứng tuyển của candidate
+GET http://localhost:4000/apply/candidate
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY5MDAwMTQ2N30.4OLoajqbs3TSKwNvGo4eqR150MU0TGMbfGJV_WRWdUE
+Content-Type: application/json
+
+### xem ứng tuyển theo id
+GET http://localhost:4000/apply/7
+
+### xem ứng tuyển theo job
+GET http://localhost:4000/apply/job/6
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODgyNjgxNn0.5lOGjqHLryN9hazrduaeHF-HJ_h7iskyYiFPiia-sKo
+
+### cập nhật status ứng tuyển:
+PUT http://localhost:4000/apply/10
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY5MDAwMTQ2N30.4OLoajqbs3TSKwNvGo4eqR150MU0TGMbfGJV_WRWdUE
+Content-Type: application/json
+
+{
+    "applyStatus":"3"
+}
+
+### lấy ứng tuyển theo job và candidate:
+GET http://localhost:4000/apply/candidate/job/2
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODgzMzkxM30.4LbFL_otWFB0YffzeyJUaG_zTwTu8e4xkfsKKG7oXGE
+Content-Type: application/json

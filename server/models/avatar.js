@@ -1,0 +1,23 @@
+const { DataTypes } = require('sequelize');
+const {sequelize} = require('../dbconnect.js');
+
+const Avatar = sequelize.define(
+    "Avatar",
+    {
+      candId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+      },
+      avatarUrl: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+    },
+    {
+      tableName: "avatar",
+      timestamps: false,
+    }
+  );
+
+  module.exports = Avatar;

@@ -1,0 +1,108 @@
+
+//---------API nhà tuyển dụng
+### đăng ký
+
+POST http://localhost:4000/company/signUpHr
+Content-Type: application/json
+
+{
+    "companyName":"Công ty abc 888",
+    "email":"abccongty7@gmail.com",
+    "companyPass":"12345"
+}
+
+### đăng nhập
+
+POST http://localhost:4000/company/loginHr
+Content-Type: application/json
+
+{
+    "email":"abccongty5@gmail.com",
+    "companyPass":"12345"
+}
+
+### Đăng xuất
+POST http://localhost:4000/company/logout
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODY2MTE0OX0.tK8JPQWVlo4xtAW0Ge2Sq7pLu5YOryafzK4mrqVX0PQ
+Content-Type: application/json
+
+### sửa thông tin
+PUT http://localhost:4000/company/
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODY2MTE0OX0.tK8JPQWVlo4xtAW0Ge2Sq7pLu5YOryafzK4mrqVX0PQ
+Content-Type: application/json
+
+{
+    "companyAddress":"Số 22 Lê Thanh Nghị",
+    "cityId":"03"
+}
+
+### lấy ra thông tin:
+GET http://localhost:4000/company/info
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODc4NTE0MX0.AeChvZiWljaYAPwtnfSS7q_2SynCwLnPF6pnFtWDxTw
+Content-Type: application/json
+
+
+//-----------API Tin tuyển dụng
+
+### Tạo tin
+
+POST http://localhost:4000/job
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODc4NTE0MX0.AeChvZiWljaYAPwtnfSS7q_2SynCwLnPF6pnFtWDxTw
+Content-Type: application/json
+
+{
+     "jobTitle":"Việc làm số 97",
+      "workAddress":"Số 1 đại cồ việt",
+      "cityId":"01",
+      "jobDescribe":"thực hiện các yêu cầu về abc xyz",
+      "eduLevelId":"3",
+      "jobTypeId":"1",
+      "isActive":"true",
+      "expireDate":"2023-06-06",
+      "workLevelId":"2",
+      "minWage":"5",
+      "experience":"1",
+      "hireCount":"11",
+      "workFieldId":"22"
+}
+
+### Sửa tin
+PUT http://localhost:4000/job/6
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODgyNjgxNn0.5lOGjqHLryN9hazrduaeHF-HJ_h7iskyYiFPiia-sKo
+Content-Type: application/json
+
+{   
+    "jobTitle":"Việc làm số 999",
+    "workLevelId":"2",
+    "minWage":"1",
+    "experience":"1",
+    "hireCount":"20",
+    "workFieldId":"10",
+    "workAddress":"Số 59 Giải phóng"
+}
+
+
+### lấy tất cả tin
+GET http://localhost:4000/job
+Content-Type: application/json
+
+### Lấy tin theo id
+GET http://localhost:4000/job/6
+Content-Type: application/json
+
+### Lấy tin theo công ty
+GET http://localhost:4000/job/company/3
+
+
+### Xóa tin theo Id
+DELETE http://localhost:4000/job/1
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTZAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjQsImlhdCI6MTY4ODAwMTgzMn0.P5ugWuTALaHFRaGdIFo9_Frbpqozh_UWZAZVpQ2UhG8
+Content-Type: application/json
+
+### lấy tin của công ty
+GET http://localhost:4000/company/jobs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODkxOTc5OX0.fHJHVhv5D0PEaxW7New74c4YHhkTazCmNDynWo-XCpM
+Content-Type: application/json
+
+### lấy danh sách tất cả công ty:
+GET http://localhost:4000/company
