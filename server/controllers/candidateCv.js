@@ -2,7 +2,6 @@ const CVService = require('../services/cv.js');
 
 exports.createCV = async (req, res) => {
   try {
-    console.log("run to wrong controller");
     const cvData = req.body;
     const candId = req.Id;
     const createdCV = await CVService.createCV(candId, cvData);
@@ -12,6 +11,17 @@ exports.createCV = async (req, res) => {
     res.status(500).json({ error: 'Failed to create CV' });
   }
 };
+
+exports.getAllCv = async (req, res) => {
+  try{
+    const cvList = await CVService.findAllMainCv();
+    return res.status(200).json({ message: "all cv get success!", cvList: cvList });
+  }
+  catch (error) {
+    console.error('Error creating CV:', error);
+    res.status(500).json({ error: 'Failed to create CV' });
+  }
+}
 
 exports.createCvWithImg = async (req, res) =>{
   try{

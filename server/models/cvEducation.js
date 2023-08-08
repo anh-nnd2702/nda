@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../dbconnect.js'); // Import đối tượng Sequelize đã cấu hình
+const CV = require('./CV');
+const EducationLevel = require('./EducationLevel');
 
 const CVEducation = sequelize.define(
   'CVEducation',

@@ -1,7 +1,6 @@
-const { Job, Company, EducationLevel, City, JobType, WorkField, WorkLevel } = require('../models/index.js');
+const { Job, Company, EducationLevel, City, JobType, WorkField, WorkLevel, ReportJob } = require('../models/index.js');
 const { Op } = require('sequelize');
-const {checkEmpty} = require('../validations/checkEmpty.js');
-
+const { checkEmpty } = require('../validations/checkEmpty.js');
 const moment = require('moment');
 
 exports.createJob = async (jobData) => {
@@ -13,6 +12,57 @@ exports.createJob = async (jobData) => {
     }
 };
 
+exports.updateJobStatus = async (jobId, isActive) => {
+    try {
+        const job = await Job.findOne({
+            where: { jobId },
+        });
+
+        if(job){
+            const reports = await ReportJob.findAll({
+                where: {
+                    jobId: jobId
+                }
+            });
+            
+            reports.map(async (rp) =>{
+                rp.reportStatus = 1;
+                await rp.save()
+            })
+
+            job.isActive = isActive;
+            await job.save();
+        }
+
+        return job;
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.deleteJob = async (jobId, companyId) => {
+    try {
+        const job = await Job.findOne({
+            where:
+            {
+                jobId: jobId,
+                companyId: companyId,
+            },
+        });
+
+        if (job) {
+            job.isActive = false;
+            await job.destroy();
+            return job;
+        }
+        else {
+            throw new Error("invalid permission", error);
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
 exports.getAllJobs = async (cityId, jobTypeId, minExp, maxExp, minWage, workLevelId, workFieldId, keyword) => {
     try {
         const currentDate = moment().format('YYYY-MM-DD');
@@ -23,47 +73,47 @@ exports.getAllJobs = async (cityId, jobTypeId, minExp, maxExp, minWage, workLeve
             },
         };
 
-        if (cityId>0) {
+        if (cityId > 0) {
             whereClause.cityId = cityId;
-          }
-      
-          if (jobTypeId>0) {
+        }
+
+        if (jobTypeId > 0) {
             whereClause.jobTypeId = jobTypeId;
-          }
-      
-          if (checkEmpty(minExp) && minExp>=0) {
+        }
+
+        if (checkEmpty(minExp) && minExp >= 0) {
             whereClause.experience = {
                 [Op.between]: [minExp, maxExp],
             };
-          }
-      
-          if (checkEmpty(maxExp) && minWage>=0) {
+        }
+
+        if (checkEmpty(maxExp) && minWage >= 0) {
             whereClause.minWage = {
-              [Op.gte]: minWage,
+                [Op.gte]: minWage,
             };
-          }
+        }
 
-          if(minWage==-1){
+        if (minWage == -1) {
             whereClause.minWage = 0,
-            whereClause.maxWage = 0
-          }
-      
-          if (workLevelId>0) {
-            whereClause.workLevelId = workLevelId;
-          }
-      
-          if (workFieldId>0) {
-            whereClause.workFieldId = workFieldId;
-          }
+                whereClause.maxWage = 0
+        }
 
-          if (checkEmpty(keyword)) {
+        if (workLevelId > 0) {
+            whereClause.workLevelId = workLevelId;
+        }
+
+        if (workFieldId > 0) {
+            whereClause.workFieldId = workFieldId;
+        }
+
+        if (checkEmpty(keyword)) {
             whereClause[Op.or] = [
-              { jobTitle: { [Op.like]: `%${keyword}%` } },
-              { jobDescribe: { [Op.like]: `%${keyword}%` } },
-              { jobRequire: { [Op.like]: `%${keyword}%` } },
-              { jobBenefit: { [Op.like]: `%${keyword}%` } }
+                { jobTitle: { [Op.like]: `%${keyword}%` } },
+                { jobDescribe: { [Op.like]: `%${keyword}%` } },
+                { jobRequire: { [Op.like]: `%${keyword}%` } },
+                { jobBenefit: { [Op.like]: `%${keyword}%` } }
             ];
-          }
+        }
 
         const activeJob = await Job.findAll({
             attributes: {
@@ -93,7 +143,6 @@ exports.getAllJobs = async (cityId, jobTypeId, minExp, maxExp, minWage, workLeve
 
 exports.getJobById = async (jobId) => {
     try {
-        const currentDate = moment().format('YYYY-MM-DD');
         const jobById = await Job.findOne({
             attributes: {
                 exclude: ['companyId'],
@@ -101,16 +150,13 @@ exports.getJobById = async (jobId) => {
             where: {
                 jobId: jobId,
                 isActive: true,
-                expireDate: {
-                    [Op.gte]: currentDate,
-                },
             },
             include: [
                 {
                     model: Company,
                     as: 'company',
                     attributes: {
-                        exclude: ['email', 'companyPass', 'companyLicense'], // Bỏ qua các trường không cần lấy trong bảng company
+                        exclude: ['email', 'companyPass', 'companyLicense'], 
                     }
                 },
                 {
@@ -130,10 +176,61 @@ exports.getJobById = async (jobId) => {
                 }
             ]
         });
-        if (!jobById) {
+        if (jobById) {
+            return jobById;
+        }
+        else{
             throw new Error('Job not found')
         }
-        return jobById;
+    }
+    catch (error) {
+        throw new Error('Can not get Job by this ID')
+    }
+}
+
+exports.adminGetJobById = async (jobId) => {
+    try {
+        const jobById = await Job.findOne({
+            attributes: {
+                exclude: ['companyId'],
+            },
+            where: {
+                jobId: jobId,
+            },
+            include: [
+                {
+                    model: Company,
+                    as: 'company',
+                    attributes: {
+                        exclude: ['email', 'companyPass', 'companyLicense'], 
+                    }
+                },
+                {
+                    model: City
+                },
+                {
+                    model: JobType
+                },
+                {
+                    model: WorkField
+                },
+                {
+                    model: WorkLevel
+                },
+                {
+                    model: EducationLevel
+                },
+                {
+                    model: ReportJob,
+                }
+            ]
+        });
+        if (jobById) {
+            return jobById;
+        }
+        else{
+            throw new Error('Job not found')
+        }
     }
     catch (error) {
         throw new Error('Can not get Job by this ID')
@@ -193,7 +290,6 @@ exports.updateJob = async (jobId, companyId, updatedData) => {
         job.jobDescribe = updatedData.jobDescribe ?? job.jobDescribe;
         job.eduLevelId = updatedData.eduLevelId ?? job.eduLevelId;
         job.jobTypeId = updatedData.jobTypeId ?? job.jobTypeId;
-        job.isActive = updatedData.isActive ?? job.isActive;
         job.expireDate = updatedData.expireDate ?? job.expireDate;
         job.genderRequire = updatedData.genderRequire ?? job.genderRequire;
         job.workLevelId = updatedData.workLevelId ?? job.workLevelId;

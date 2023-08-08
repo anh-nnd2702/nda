@@ -52,3 +52,46 @@ exports.getAllReport = async (req, res) =>{
     }
 }
 
+exports.updateReportStatus = async (req, res) =>{
+    try{
+        const {reportId} = req.params;
+        const {newStatus} = req.body;
+        const updatedReport = await ReportServices.updateReportStatus(reportId, newStatus);
+        if(updatedReport){
+            return res.status(200).json({reportJob: updatedReport, message: "Update report status success!"});
+        }
+    }
+    catch(error)
+    {
+        return res.status(500).json({message: "internal server error"})
+    }
+}
+
+exports.updateReportStatusByJob = async (req, res) =>{
+    try{
+        const {jobId} = req.params;
+        const {newStatus} = req.body;
+        const updatedReport = await ReportServices.updateReportByJobId(jobId, newStatus);
+        if(updatedReport){
+            return res.status(200).json({reportJob: updatedReport, message: "Update report status success!"});
+        }
+    }
+    catch(error)
+    {
+        return res.status(500).json({message: "internal server error"})
+    }
+}
+
+exports.deleteReportById = async (req, res) =>{
+    try{
+        const {reportId} = req.params;
+        const deleted = await ReportServices.deleteReport(reportId);
+        if(deleted){
+            return res.status(200).json({deleted: deleted, message: "Delete report status success!"});
+        }
+    }
+    catch(error)
+    {
+        return res.status(500).json({message: "internal server error"})
+    }
+}

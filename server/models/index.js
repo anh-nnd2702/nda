@@ -28,6 +28,7 @@ const AplEducation = require('./aplEducation.js');
 const AplExperience = require('./aplExperience.js');
 const AplProject = require('./aplProject.js');
 const AplSkill = require('./aplSkill.js');
+const Keyword = require('./keyword.js');
 const models = {
     AdminAcc,
     AppliedJob,
@@ -57,17 +58,24 @@ const models = {
     WorkField,
     WorkLevel,
     CvAward,
-    CvActivity
+    CvActivity,
+    Keyword
 }
 
-AppliedJob.belongsTo(Job, { foreignKey: 'jobId' });
+AppliedJob.belongsTo(Job, { 
+    foreignKey: 'jobId',
+    onDelete: 'CASCADE' });
 AppliedJob.belongsTo(Candidate, { foreignKey: 'candId' });
 AppliedJob.belongsTo(City, { foreignKey: 'cityId' });
-Company.belongsTo(City, {foreignKey: 'cityId'});
+Company.belongsTo(City, {foreignKey: 'cityId'})
 Avatar.belongsTo(Candidate, {
     foreignKey: "candId",
     as: "candidate",
 });
+
+Keyword.belongsTo(Candidate, { foreignKey: 'candId', onDelete: 'CASCADE' });
+Candidate.hasMany(Keyword, { foreignKey: 'candId', onDelete: 'CASCADE' });
+
 Cv.belongsTo(Candidate, { foreignKey: 'candId', as: 'candidate' });
 // Kết nối quan hệ với bảng WorkField
 Cv.belongsTo(WorkField, { foreignKey: 'workFieldId', as: 'workField' });
@@ -113,6 +121,7 @@ CvEducation.belongsTo(EducationLevel, {
 });
 Job.belongsTo(Company, {
     foreignKey: 'companyId',
+    onDelete: 'CASCADE'
 });
 
 // Tạo quan hệ 1-n với bảng City
@@ -143,23 +152,30 @@ Job.belongsTo(WorkField, {
 MatchJob.belongsTo(Job, {
     foreignKey: 'jobId',
     targetKey: 'jobId',
+    onDelete: 'CASCADE'
 });
 
 // Tạo quan hệ Many-to-One với model Candidate
 MatchJob.belongsTo(Candidate, {
     foreignKey: 'candId',
     targetKey: 'Id',
+    onDelete: 'CASCADE'
 });
 
 ReportJob.belongsTo(Job, {
     foreignKey: 'jobId',
     targetKey: 'jobId',
+    onDelete: 'CASCADE'
 });
-
+Job.hasMany(ReportJob, {
+    foreignKey: 'jobId',   // Khóa ngoại trên mô hình ReportJob
+    sourceKey: 'jobId',    // Khóa chính trên mô hình Job
+  });
 // Tạo quan hệ Many-to-One với model Candidate
 ReportJob.belongsTo(Candidate, {
     foreignKey: 'candId',
     targetKey: 'Id',
+    onDelete: 'CASCADE'
 });
 // Tạo quan hệ Many-to-One với model Job
 SavedJob.belongsTo(Job, {
@@ -175,14 +191,14 @@ SavedJob.belongsTo(Candidate, {
     onDelete: 'CASCADE'
 });
 // Khai báo quan hệ giữa các bảng (foreign keys)
-AplAward.belongsTo(AppliedJob, { foreignKey: 'applyId' });
-AplActivity.belongsTo(AppliedJob, { foreignKey: 'applyId' });
-AplCertificate.belongsTo(AppliedJob, { foreignKey: 'applyId' });
-AplEducation.belongsTo(AppliedJob, { foreignKey: 'applyId' });
+AplAward.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
+AplActivity.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
+AplCertificate.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
+AplEducation.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
 AplEducation.belongsTo(EducationLevel, { foreignKey: 'eduLevelId' });
-AplExperience.belongsTo(AppliedJob, { foreignKey: 'applyid' });
-AplProject.belongsTo(AppliedJob, { foreignKey: 'applyId' });
-AplSkill.belongsTo(AppliedJob, { foreignKey: 'applyId' });
+AplExperience.belongsTo(AppliedJob, { foreignKey: 'applyid', onDelete: 'CASCADE' });
+AplProject.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
+AplSkill.belongsTo(AppliedJob, { foreignKey: 'applyId', onDelete: 'CASCADE' });
 
 Object.values(models).forEach((model) => {
     if (model.associate) {

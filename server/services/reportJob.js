@@ -1,21 +1,47 @@
-const {ReportJob, Job, Company, Candidate, City} = require('../models');
+const { ReportJob, Job, Company, Candidate, City } = require('../models');
 
-exports.createReport = async (reportData) =>{
-    try{
+exports.createReport = async (reportData) => {
+    try {
         const reportCreated = await ReportJob.create(reportData)
         return reportCreated;
     }
-    catch(error){
+    catch (error) {
         throw error;
     }
 }
 
-exports.getAllReport = async () =>{
+exports.updateReportByJobId = async (jobId, newStatus) =>{
     try{
+        const reports = await ReportJob.findAll({
+            where: {
+                jobId: jobId
+            }
+        })
+
+        if (reports && reports.length > 0) {
+            for (const report of reports) {
+              await report.update({
+                reportStatus: newStatus,
+              });
+            }
+        }
+
+        return true;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+exports.getAllReport = async () => {
+    try {
         const reportList = await ReportJob.findAll({
             include: [
                 {
                     model: Job,
+                    where: {
+                        isActive: true,
+                    },
                     attributes: {
                         exclude: ['jobDescribe', 'jobRequire', 'jobBenefit']
                     },
@@ -35,17 +61,17 @@ exports.getAllReport = async () =>{
                     attributes: ['fullName', 'email', 'phoneNumber']
                 }
             ],
-            order:[['reportStatus', 'DESC'], ['reportTime', 'DESC']]
+            order: [['reportStatus', 'ASC'], ['reportTime', 'DESC']]
         })
         return reportList;
     }
-    catch(error){
+    catch (error) {
         throw error;
     }
 }
 
-exports.getReportById = async (reportId) =>{
-    try{
+exports.getReportById = async (reportId) => {
+    try {
         const reportJob = await ReportJob.findOne({
             where: {
                 reportId
@@ -75,26 +101,55 @@ exports.getReportById = async (reportId) =>{
         })
         return reportJob;
     }
-    catch(error){
+    catch (error) {
         throw error;
     }
 }
 
-exports.updateReportStatus = async (jobId) =>{
-    try{
+exports.updateReportStatus = async (reportId, newStatus) => {
+    try {
         const reportedJob = ReportJob.findOne({
             where: {
                 reportId
             },
         });
-
-        reportedJob.reportStatus = 1;
-        const savedReport = await reportedJob.save();
-        return savedReport;
+        if (reportedJob) {
+            reportedJob.reportStatus = newStatus;
+            const savedReport = await reportedJob.save();
+            return savedReport;
+        }
+        else throw new Error("can not find report", error);
     }
-    catch(error){
+    catch (error) {
         throw error;
     }
 
 }
 
+exports.deleteReport = async (reportId) => {
+    try {
+        await ReportJob.destroy({
+            where: {
+                reportId
+            }
+        });
+        return true;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+exports.getReportByJobId = async (jobId) =>{
+    try {
+        const reports = await ReportJob.findAll({
+            where: {
+                jobId: jobId
+            }
+        });
+        return reports;
+    }
+    catch (error) {
+        throw error;
+    }
+}

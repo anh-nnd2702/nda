@@ -12,7 +12,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'datn-nda', // Thư mục trên Cloudinary để lưu trữ file
-    allowedFormats: ['jpg', 'jpeg', 'png'], // Định dạng file cho phép
+    allowedFormats: ['jpg', 'jpeg', 'png', 'pdf'], // Định dạng file cho phép
   },
 });
 

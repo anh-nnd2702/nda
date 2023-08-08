@@ -87,7 +87,7 @@ GET http://localhost:4000/job
 Content-Type: application/json
 
 ### Lấy tin theo id
-GET http://localhost:4000/job/6
+GET http://localhost:4000/job/11
 Content-Type: application/json
 
 ### Lấy tin theo công ty
@@ -101,8 +101,8 @@ Content-Type: application/json
 
 ### lấy tin của công ty
 GET http://localhost:4000/company/jobs
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY4ODkxOTc5OX0.fHJHVhv5D0PEaxW7New74c4YHhkTazCmNDynWo-XCpM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2Nvbmd0eTVAZ21haWwuY29tIiwiaXNIciI6dHJ1ZSwiSWQiOjMsImlhdCI6MTY5MDQ4ODgyNX0.8liTHoMSd5PHvMPV5PiiKkj4LISIPBqelDvXTem6BDM
 Content-Type: application/json
 
 ### lấy danh sách tất cả công ty:
-GET http://localhost:4000/company
+GET http://localhost:4000/company/infor/3

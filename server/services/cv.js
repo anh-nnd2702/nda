@@ -3,13 +3,26 @@ const {Cv, CvCertificate, CvEducation, CvExperience,
 
 const {sequelize} = require('../dbconnect.js');
 
-
 const checkValid = (inputValue) => {
     if (inputValue === null || inputValue === 'null' || inputValue === undefined || inputValue === "undefined") {
         return false;
     }
     else {
         return true;
+    }
+}
+
+exports.findAllMainCv = async () =>{
+    try {
+        const allCv = await Cv.findAll({
+            where: { 
+                isMainCv : true
+            }
+        })
+        return allCv;
+    }
+    catch (error) {
+        throw new Error("error getting cv", error)
     }
 }
 

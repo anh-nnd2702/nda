@@ -38,3 +38,13 @@ Content-Type: application/json
 GET http://localhost:4000/apply/candidate/job/2
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY4ODgzMzkxM30.4LbFL_otWFB0YffzeyJUaG_zTwTu8e4xkfsKKG7oXGE
 Content-Type: application/json
+
+
+### admin login 
+POST http://localhost:4000/admin/login
+Content-Type: application/json
+
+{
+    "email":"ndajob03@gmail.com",
+    "adminPass":"admin123@"
+}

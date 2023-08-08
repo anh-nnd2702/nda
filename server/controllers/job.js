@@ -16,9 +16,17 @@ exports.getAllJobs = async (req, res) => {
 
 exports.getJobById = async (req, res) => {
     const { jobId } = req.params;
+    const {isAdmin} = req.query;
     try {
-        const job = await jobService.getJobById(jobId);
-        return res.status(200).json({ job });
+        if(isAdmin=='true'){
+            const job = await jobService.adminGetJobById(jobId);
+            return res.status(200).json({ job });
+        }
+        else{
+            const job = await jobService.getJobById(jobId);
+            return res.status(200).json({ job });
+        }
+        
     } catch (error) {
         console.error('Error retrieving job by ID:', error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -82,7 +90,6 @@ exports.updateJob = async (req, res) => {
     const companyId = req.Id;
     const { jobTitle, workAddress, cityId, jobDescribe, jobRequire, jobBenefit, eduLevelId, jobTypeId, expireDate, genderRequire, workLevelId, minWage, maxWage, experience, hireCount, workFieldId } = req.body;
     const modifiedTime = new Date();
-    const isActive = 'true';
     const jobData = {
         jobTitle,
         companyId,
@@ -93,7 +100,6 @@ exports.updateJob = async (req, res) => {
         jobBenefit,
         eduLevelId,
         jobTypeId,
-        isActive,
         expireDate,
         genderRequire,
         workLevelId,
@@ -114,13 +120,25 @@ exports.updateJob = async (req, res) => {
     }
 }
 
+exports.updateJobStatus = async (req, res) => {
+    const { jobId } = req.params;
+    const {isActive} = req.body;
+    try {
+        const deactivatedJob = await jobService.updateJobStatus(jobId, isActive);
+        if(deactivatedJob){
+            return res.status(200).json({ message: 'job deactivate successful' });
+        }
+    } catch (error) {
+        console.error('Error updating job:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 exports.deleteJobById = async (req, res) => {
     const { jobId } = req.params;
     const companyId = req.Id;
-    const isActive = 'false';
-    const jobData = { isActive };
     try {
-        const deletedJob = await jobService.updateJob(jobId, companyId, jobData);
+        const deletedJob = await jobService.deleteJob(jobId, companyId);
         return res.status(200).json({ message: 'job delete successful' });
     } catch (error) {
         console.error('Error deleting job:', error);

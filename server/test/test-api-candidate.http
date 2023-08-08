@@ -42,7 +42,7 @@ Content-Type: application/json
 
 ### Lấy thông tin candidate
 GET http://localhost:4000/candidate
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJhaG9jMTk5OUBnbWFpbC5jb20iLCJJZCI6MTMsImlhdCI6MTY4ODUyNjU5NX0.anCo9LWSmUnMzMPpeofqLu0zdb5aMoIp1hilay25k-U
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJldHJhbjEyM0BnbWFpbC5jb20iLCJJZCI6MTYsImlhdCI6MTY5MTIyNTcyN30.Z_Z7JvaWp9M0dDI_l3UutafHR5Z-cIvBQk-EvxsHUAE
 Content-Type: application/json
 
 ### Lấy tất cả cv của candidate
@@ -121,4 +121,18 @@ Content-Type: application/json
 
 {
     "reportDescribe":"tin này lừa đảo"
+}
+
+### get all report
+GET http://localhost:4000/report/
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5kYWpvYjAzQGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsIklkIjoxLCJpYXQiOjE2OTEyOTIzNDB9.9TkiP8ZXkTVRM1U2HK6Z-1i-4Ms1QL5X39gCDQ4RmnU
+
+### request change password
+PUT http://localhost:4000/candidate/password
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImR1Y2FuaG5ndXllbm5hbmdAZ21haWwuY29tIiwiSWQiOjE5LCJpc1Jlc2V0Ijp0cnVlLCJpYXQiOjE2OTE1MDc5NTYsImV4cCI6MTY5MTUwODU1Nn0.TfiH8oF_taH7m5OdwO3srqgB-H-iWoUAp60_jRsEArk
+
+{
+    "newPassword":"hello123"
 }

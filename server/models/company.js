@@ -42,10 +42,14 @@ const Company = sequelize.define('company', {
     allowNull: false,
   },
   companyLicense: {
-    type: DataTypes.BLOB('long'),
+    type: DataTypes.STRING(255),
     defaultValue: null,
   },
   isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  isGranted: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },

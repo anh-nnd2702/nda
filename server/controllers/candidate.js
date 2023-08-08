@@ -2,11 +2,10 @@ const candidateServices = require('../services/candidate.js')
 
 exports.updateCandidate = async (req, res) => {
   try {
-    const { fullName, phoneNumber, cityId, gender, dateOfBirth, address, isSeeking, isAcceptEmail, minWage, workFieldId, experience, workLevelId, jobTypeId } = req.body;
+    const { fullName, phoneNumber, cityId, gender, dateOfBirth, address, isSeeking, isAcceptEmail, minWage, workFieldId, experience, workLevelId, jobTypeId, tags } = req.body;
     const email = req.email;
     const Id = req.Id;
     candidateServices.validateCandidateData(email, req.body);
-    console.log(req.body);
     // Cập nhật thông tin ứng viên
     const updatedCandidate = await candidateServices.updateCandidate(Id, {
       email,
@@ -25,6 +24,9 @@ exports.updateCandidate = async (req, res) => {
       jobTypeId
     });
 
+    const updatedKeyword = await candidateServices.updateKeyword(tags, Id);
+    updatedCandidate.keyword = updatedKeyword;
+    
     return res.status(200).json({ message: 'Candidate updated successfully', candidate: updatedCandidate });
   } catch (error) {
     console.error('Error updating candidate:', error);

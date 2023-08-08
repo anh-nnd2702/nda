@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../dbconnect.js'); // Import đối tượng Sequelize đã cấu hình
+const Job = require('../models/job.js');
+const Candidate = require('../models/candidate.js')
 
 const SavedJob = sequelize.define(
   'SavedJob',

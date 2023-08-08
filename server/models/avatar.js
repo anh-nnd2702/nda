@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../dbconnect.js');
-
+const Candidate = require("./candidate.js")
 const Avatar = sequelize.define(
     "Avatar",
     {
