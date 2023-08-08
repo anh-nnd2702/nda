@@ -1,8 +1,4 @@
-const Job = require('../models/job.js');
-const Candidate = require('../models/candidate.js');
-const SavedJob = require('../models/savedJob.js');
-const Company = require('../models/company.js');
-const City = require('../models/city.js');
+const {Job, SavedJob, Company, City} = require('../models');
 
 exports.savejob = async (saveData) => {
     try {

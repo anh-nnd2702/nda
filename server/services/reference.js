@@ -1,8 +1,4 @@
-const City = require('../models/city.js');
-const EducationLevel = require('../models/educationLevel.js');
-const JobType = require('../models/jobType.js');
-const WorkField = require('../models/workField.js');
-const WorkLevel = require('../models/workLevel.js');
+const {City, EducationLevel, JobType, WorkField, WorkLevel} = require('../models');
 
 exports.getCity = async () =>{
     try{

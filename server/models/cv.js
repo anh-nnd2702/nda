@@ -1,8 +1,6 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../dbconnect.js');
-const Candidate = require('./candidate.js');
-const WorkField = require('./workField.js');
-const City = require('./city.js');
+
 const Cv = sequelize.define(
   'Cv',
   {

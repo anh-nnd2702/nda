@@ -1,11 +1,7 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../dbconnect.js');
 const Company = require('./company.js');
-const EducationLevel = require('./educationLevel.js');
-const City = require('./city.js');
-const JobType = require('./jobType.js');
-const WorkField = require('./workField.js');
-const WorkLevel = require('./workLevel.js')
+
 const Job = sequelize.define('Job', {
   jobId: {
     type: DataTypes.INTEGER,
