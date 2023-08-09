@@ -1,3 +1,3 @@
 module.exports = {
-    cronSchedule: '20 10 * * *',
+    cronSchedule: '01 11 * * *',
 };

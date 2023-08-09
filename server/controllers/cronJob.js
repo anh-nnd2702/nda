@@ -5,6 +5,7 @@ const { candidateEmailSender } = require('../utils/emailSender.js')
 
 exports.cronMatchJob = async () => {
     try {
+        console.log("Running cron job !!!");
         const settingList = await candidateServices.getAllCandidateSettings();
         const jobList = await jobServices.getAllJobs();
 
