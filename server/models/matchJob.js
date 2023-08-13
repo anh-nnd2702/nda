@@ -18,6 +18,10 @@ const MatchJob = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    matchStatus: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    }
   },
   {
     tableName: 'matchjob',

@@ -1,4 +1,6 @@
-const { Job, MatchJob } = require('../models/index.js');
+const { Job, MatchJob, City, Company } = require('../models/index.js');
+const { Op } = require('sequelize');
+const moment = require('moment');
 
 exports.matchJobCalculator = async (candSetting, jobList) => {
     try {
@@ -15,6 +17,8 @@ exports.matchJobCalculator = async (candSetting, jobList) => {
         matchJobs = matchJobs.filter((matchJob) => {
             return (matchJob.matchPoint > 6)
         })
+
+        const removeOld = await removeOldMatchJob(candSetting.Id);
 
         if (matchJobs.length > 0) {
             matchJobs.sort((a, b) => b.matchPoint - a.matchPoint);
@@ -86,7 +90,7 @@ const matchJobPointCount = (candSetting, job) => {
     return matchPoint;
 }
 
-const isMatchJobExist = async (jobId, candId) => {
+/*const isMatchJobExist = async (jobId, candId) => {
     const matchJob = await MatchJob.findOne({
         where: {
             jobId: jobId,
@@ -94,7 +98,21 @@ const isMatchJobExist = async (jobId, candId) => {
         },
     });
     return matchJob !== null;
-};
+};*/
+
+const removeOldMatchJob = async (candId) =>{
+    try{
+        await MatchJob.destroy({
+            where: {
+                candId: candId,
+            }
+        })
+        return true;
+    }
+    catch(error){
+        throw error;
+    }
+}
 
 const processMatchJobs = async (matchJobs) => {
     const newMatchJobs = [];
@@ -102,13 +120,15 @@ const processMatchJobs = async (matchJobs) => {
     for (const matchJob of matchJobs) {
         const { jobId, candId } = matchJob;
 
-        if (await isMatchJobExist(jobId, candId)) {
+        /*if (await isMatchJobExist(jobId, candId)) {
             continue;
         }
-
+        */
+       
         const newMatchJob = await MatchJob.create({
             jobId: jobId,
             candId: candId,
+            matchStatus: true,
         });
 
         newMatchJobs.push(newMatchJob);
@@ -116,3 +136,59 @@ const processMatchJobs = async (matchJobs) => {
 
     return newMatchJobs;
 };
+
+exports.getMatchJobByCandidate = async (candId) =>{
+    try{
+        const currentDate = moment().format('YYYY-MM-DD');
+        const matchJob = await MatchJob.findAll({
+            where: {
+                candId: candId,
+                matchStatus: true,
+            },
+            include: {
+                model: Job,
+                where: {
+                    isActive: true,
+                    expireDate: {
+                        [Op.gte]: currentDate,
+                    },
+                },
+                include: [
+                    {
+                        model: City
+                    },
+                    {
+                        model: Company,
+                        attributes: {
+                            exclude: ['email', 'companyPass', 'companyLicense'],
+                        },
+                    },
+                ],
+            }
+        });
+
+        return matchJob;
+    }
+    catch(error){
+        throw error;
+    }
+}
+
+exports.updateMatchjobStatus = async (matchId, Id) =>{
+    try{
+        const matchJob = await MatchJob.findOne({
+            where: {
+                matchId: matchId,
+                candId: Id,
+            },
+        });
+        if(matchJob){
+            matchJob.matchStatus = false;
+            await matchJob.save();
+        }
+        return matchJob;
+    }
+    catch(error){
+        throw error;
+    }
+}

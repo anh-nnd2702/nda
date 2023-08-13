@@ -1,7 +1,8 @@
-const {Cv, CvCertificate, CvEducation, CvExperience, 
-    CvProject, CvSkill, CvActivity, CvAward} = require('../models')
+const { Cv, CvCertificate, CvEducation, CvExperience,
+    CvProject, CvSkill, CvActivity, CvAward, Candidate } = require('../models')
 
-const {sequelize} = require('../dbconnect.js');
+const { sequelize } = require('../dbconnect.js');
+const { checkEmpty } = require('../validations/checkEmpty');
 
 const checkValid = (inputValue) => {
     if (inputValue === null || inputValue === 'null' || inputValue === undefined || inputValue === "undefined") {
@@ -12,13 +13,146 @@ const checkValid = (inputValue) => {
     }
 }
 
-exports.findAllMainCv = async () =>{
+exports.findAllMainCv = async (keyword, cityId, workFieldId, experience, eduLevelId, gender, skill) => {
     try {
-        const allCv = await Cv.findAll({
-            where: { 
-                isMainCv : true
-            }
-        })
+        let whereClause = { isMainCv: true }
+        if (cityId > 0) {
+            whereClause.cityId = cityId;
+        }
+        if (workFieldId > 0) {
+            whereClause.workFieldId = workFieldId;
+        }
+        if (gender > 0) {
+            whereClause.gender = gender;
+        }
+
+        let allCv = await Cv.findAll({
+            where: whereClause,
+            include: [
+                {
+                    model: Candidate,
+                    as: 'candidate',
+                    attributes: ['isSeeking'],
+                    where: { isSeeking: true }
+                },
+                {
+                    model: CvActivity,
+                    as: 'CvActivity'
+                },
+                {
+                    model: CvAward,
+                    as: 'CvAward'
+                },
+                {
+                    model: CvCertificate,
+                    as: 'CvCertificate'
+                },
+                {
+                    model: CvEducation,
+                    as: 'CvEducation'
+                },
+                {
+                    model: CvExperience,
+                    as: 'CvExperience'
+                },
+                {
+                    model: CvProject,
+                    as: 'CvProject'
+                },
+                {
+                    model: CvSkill,
+                    as: 'CvSkill'
+                }
+            ]
+        });
+
+        if (experience == 1) {
+            allCv = allCv.filter((cv) => {
+                return cv.CvExperience.length === 0;
+            })
+        }
+        else if (experience == 2) {
+            allCv = allCv.filter((cv) => {
+                return cv.CvExperience.length > 0;
+            })
+        }
+
+        if (eduLevelId > 0) {
+            allCv = allCv.filter((cv) => {
+                if (cv.CvEducation.length === 0) {
+                    return false;
+                }
+                else {
+                    let founded = false;
+                    for (let edu of cv.CvEducation) {
+                        if (edu.eduLevelId == eduLevelId) founded = true;
+                    }
+                    return founded;
+                }
+            })
+        }
+
+        if (checkEmpty(keyword)) {
+            allCv = allCv.filter((cv) => {
+                let allText = "";
+                allText += cv.cvTitle + ' ';
+                allText += cv.cvIntro + ' ';
+                allText += cv.fullName + ' ';
+                allText += cv.cvPosition + ' ';
+
+                if(cv.CvActivity && cv.CvActivity.length>0){
+                    cv.CvActivity.forEach(acti => {
+                        allText += (acti.activityName +' '+ acti.organization + ' '+ acti.activityDescribe+' ');
+                    });
+                }
+                if(cv.CvAward && cv.CvAward.length>0){
+                    cv.CvAward.forEach(award => {
+                        allText += (award.awardTitle +' '+ award.organization + ' '+ award.awardDescribe+' ');
+                    });
+                }
+                if(cv.CvCertificate && cv.CvCertificate.length>0){
+                    cv.CvCertificate.forEach(cert => {
+                        allText += (cert.certTitle +' '+ cert.organization + ' '+ cert.certDescribe+' ');
+                    });
+                }
+                if(cv.CvEducation && cv.CvEducation.length>0){
+                    cv.CvEducation.forEach(edu => {
+                        allText += (edu.schoolName +' '+ edu.major + ' '+ edu.eduDescribe+' ');
+                    });
+                }
+                if(cv.CvExperience && cv.CvExperience.length>0){
+                    cv.CvExperience.forEach(exper => {
+                        allText += (exper.companyName +' '+ exper.position + ' '+ exper.experDescribe+' ');
+                    });
+                }
+                if(cv.CvProject && cv.CvProject.length>0){
+                    cv.CvProject.forEach(prj => {
+                        allText += (prj.prjName +' '+ prj.prjPosition + ' '+ prj.prjDescribe+' ');
+                    });
+                }
+                if(cv.CvSkill && cv.CvSkill.length>0){
+                    cv.CvSkill.forEach(skl => {
+                        allText += (skl.skillName +' '+ skl.skillDescribe+' ');
+                    });
+                }
+
+                return allText.toLowerCase().includes(keyword.toLowerCase());
+            })
+        }
+
+        if(checkEmpty(skill)){
+            let skillText = "";
+            allCv = allCv.filter((cv) => {
+                if(!cv.Skill || cv.CvSkill.length ===0) return false;
+                else {
+                    cv.CvSkill.forEach(skl => {
+                        skillText += (skl.skillName +' '+ skl.skillDescribe+' ');
+                    });
+                    return skillText.toLowerCase().includes(skill.toLowerCase())
+                }
+            })
+        }
+
         return allCv;
     }
     catch (error) {
@@ -42,10 +176,10 @@ exports.createCV = async (candId, cvData) => {
                 isMainCv: true
             }
         })
-        if(!mainCv){
+        if (!mainCv) {
             theMainCv = true
         }
-        else{
+        else {
             theMainCv = false
         }
         const createdCV = await Cv.create(
@@ -86,10 +220,10 @@ exports.createCV = async (candId, cvData) => {
         if (cvCertificate) {
             await createCvCertificates(createdCV.cvId, cvCertificate, transaction);
         }
-        if(cvAward) {
+        if (cvAward) {
             await createCvAwards(createdCV.cvId, cvAward, transaction);
         }
-        if(cvActivity){
+        if (cvActivity) {
             await createCvActivity(createdCV.cvId, cvActivity, transaction);
         }
 
@@ -153,26 +287,26 @@ const createCvAwards = async (cvId, cvAwards, transaction) => {
     return Promise.all(
         cvAwards.map(async (cvAward) => {
             const { awardTitle, organization, awardYear, awardDescribe } = cvAward;
-            await CvAward.create({ cvId, awardTitle, organization, awardYear, awardDescribe}, { transaction });
+            await CvAward.create({ cvId, awardTitle, organization, awardYear, awardDescribe }, { transaction });
         })
     );
 };
 
-const createCvActivity = async (cvId, cvActivities, transaction)=>{
+const createCvActivity = async (cvId, cvActivities, transaction) => {
     return Promise.all(
-        cvActivities.map(async (cvActivity) =>{
-            const {activityName, organization, startDate, endDate, activityDescribe} = cvActivity;
-            await CvActivity.create({cvId, activityName, organization, startDate, endDate, activityDescribe}, {transaction});
+        cvActivities.map(async (cvActivity) => {
+            const { activityName, organization, startDate, endDate, activityDescribe } = cvActivity;
+            await CvActivity.create({ cvId, activityName, organization, startDate, endDate, activityDescribe }, { transaction });
         })
     );
 };
 
-exports.getCv = async (cvId, candId) => {
+exports.getCv = async (cvId) => {
     try {
         const cvData = await Cv.findOne({
             where: {
                 cvId
-            }            
+            }
         });
 
         const cvSkills = await CvSkill.findAll({
@@ -284,8 +418,8 @@ exports.getCv = async (cvId, candId) => {
             }));
         }
 
-        if (cvAwards.length >0){
-            cvJson.cvAward = cvAwards.map((cvAward)=>({
+        if (cvAwards.length > 0) {
+            cvJson.cvAward = cvAwards.map((cvAward) => ({
                 awardTitle: cvAward.awardTitle,
                 organization: cvAward.organization,
                 awardYear: cvAward.awardYear,
@@ -293,8 +427,8 @@ exports.getCv = async (cvId, candId) => {
             }));
         }
 
-        if (cvActivities.length >0){
-            cvJson.cvActivity = cvActivities.map((cvActivity)=>({
+        if (cvActivities.length > 0) {
+            cvJson.cvActivity = cvActivities.map((cvActivity) => ({
                 activityName: cvActivity.activityName,
                 organization: cvActivity.organization,
                 startDate: cvActivity.startDate,
@@ -364,7 +498,7 @@ exports.updateCV = async (cvId, cvData) => {
         if (checkValid(cvIntro)) {
             cvToUpdate.cvIntro = cvIntro;
         }
-            cvToUpdate.cvImgUrl = cvImgUrl;
+        cvToUpdate.cvImgUrl = cvImgUrl;
         if (checkValid(workFieldId)) {
             cvToUpdate.workFieldId = workFieldId;
         }
@@ -629,7 +763,7 @@ exports.updateCvAward = async (cvId, cvAward) => {
             await Promise.all(
                 cvAward.map(async (award) => {
                     const { awardTitle, organization, awardYear, awardDescribe } = award;
-                    await CvAward.create({ cvId, awardTitle, organization, awardYear, awardDescribe}, { transaction });
+                    await CvAward.create({ cvId, awardTitle, organization, awardYear, awardDescribe }, { transaction });
                 })
             );
         }

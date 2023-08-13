@@ -112,7 +112,7 @@ exports.signUpHr = async (req, res) => {
   const { companyName, email, companyPass } = req.body;
   try {
 
-    const existingCompany = await Company.findOne({ where: { email } });
+    const existingCompany = await authServices.getCompanyAcc(email);
     if (existingCompany) {
       return res.status(400).json({ error: 'Email này đã được đăng ký!' });
     }
@@ -131,7 +131,7 @@ exports.signUpHr = async (req, res) => {
 
     const token = jwt.sign({ email: company.email, isHr: true, Id: company.Id }, secretKey);
 
-    const infor = { companyName: company.companyName, logo: company.companyLogo, isGranted: false };
+    const infor = { companyName: company.companyName, logo: company.companyLogo, isGranted: false, Id: company.Id };
     res
       .status(200)
       .json({ infor, token })

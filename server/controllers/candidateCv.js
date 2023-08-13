@@ -5,16 +5,16 @@ exports.createCV = async (req, res) => {
     const cvData = req.body;
     const candId = req.Id;
     const createdCV = await CVService.createCV(candId, cvData);
-    return res.status(200).json({ message: "cv created success!", createdCV });
+    return res.status(200).json({ message: "Tạo CV thành công!", createdCV });
   } catch (error) {
-    console.error('Error creating CV:', error);
-    res.status(500).json({ error: 'Failed to create CV' });
+    res.status(500).json({ error: 'Có lỗi xảy ra khi tạo CV!' });
   }
 };
 
 exports.getAllCv = async (req, res) => {
   try{
-    const cvList = await CVService.findAllMainCv();
+    const {keyword, cityId, workFieldId, experience, eduLevelId, gender, skill} = req.query;
+    const cvList = await CVService.findAllMainCv(keyword, cityId, workFieldId, experience, eduLevelId, gender, skill);
     return res.status(200).json({ message: "all cv get success!", cvList: cvList });
   }
   catch (error) {
@@ -28,10 +28,10 @@ exports.createCvWithImg = async (req, res) =>{
     const cvData = req.body;
     const candId = req.Id;
     const createdCV = await CVService.createCV(candId, cvData);
-    return res.status(200).json({ message: "cv created success!", createdCV });
+    return res.status(200).json({ message: "Tạo CV thành công!", createdCV });
   } catch (error) {
     console.error('Error creating CV:', error);
-    res.status(500).json({ error: 'Failed to create CV' });
+    res.status(500).json({ error: 'Có lỗi xảy ra khi tạo CV' });
     
   }
 }
@@ -124,7 +124,7 @@ exports.deleteCv = async (req, res) => {
       return res.status(404).json({ message: 'CV not found' });
     }
 
-    res.json({ message: 'CV deleted successfully' });
+    res.json({ message: 'Xóa CV thành công' });
   } catch (error) {
     console.error('Error deleting CV:', error);
     res.status(500).json({ message: 'Failed to delete CV' });

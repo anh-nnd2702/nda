@@ -46,10 +46,11 @@ const sendNotificationToCompany = (companyId, message, jobId, applyId) => {
 const sendNotificationToCandidate = (candidateId, message, jobId, applyId) => {
   const socketId = `candidate${candidateId}`;
   const candidateSocket = allSockets[socketId];
-  console.log(candidateId, message, jobId, applyId, candidateSocket);
+  //console.log(candidateId, message, jobId, applyId, candidateSocket);
   if (candidateSocket) {
     candidateSocket.emit('applyNotification', { message, jobId, applyId });
   }
+  console.log("RUN TO THIS");
 };
 
 module.exports = { initializeSocket, sendNotificationToCompany, sendNotificationToCandidate };

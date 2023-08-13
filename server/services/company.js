@@ -110,9 +110,11 @@ exports.getAllCompany = async (keyword) => {
         const whereClause = { isActive: true, isGranted: true };
 
         if (checkEmpty(keyword)) {
+            const lowerKeyword = keyword.toLowerCase();
             whereClause[Op.or] = [
-                { companyName: { [Op.like]: `%${keyword}%` } },
-                { companyIntro: { [Op.like]: `%${keyword}%` } }
+                { companyName: { [Op.like]: `%${lowerKeyword}%` } },
+                { companyIntro: { [Op.like]: `%${lowerKeyword}%` } },
+                { companyAddress: { [Op.like]: `%${lowerKeyword}%` } }
             ]
         }
         const companyList = await Company.findAll({
@@ -123,7 +125,8 @@ exports.getAllCompany = async (keyword) => {
             include:
             {
                 model: City
-            }
+            },
+            order: [['Id', 'DESC']]
         });
         return companyList;
     }
@@ -151,7 +154,8 @@ exports.adminGetAllCompany = async (keyword) => {
             include:
             {
                 model: City
-            }
+            },
+            order: [['Id', 'DESC']]
         });
         return companyList;
     }

@@ -1,4 +1,4 @@
-const candidateServices = require('../services/candidate.js')
+const candidateServices = require('../services/candidate.js');
 
 exports.updateCandidate = async (req, res) => {
   try {

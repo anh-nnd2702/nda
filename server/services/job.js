@@ -25,10 +25,13 @@ exports.updateJobStatus = async (jobId, isActive) => {
                 }
             });
             
-            reports.map(async (rp) =>{
-                rp.reportStatus = 1;
-                await rp.save()
-            })
+            if (reports && reports.length > 0) {
+                for (const report of reports) {
+                  await report.update({
+                    reportStatus: 1,
+                  });
+                }
+            }
 
             job.isActive = isActive;
             await job.save();
@@ -95,7 +98,7 @@ exports.getAllJobs = async (cityId, jobTypeId, minExp, maxExp, minWage, workLeve
 
         if (minWage == -1) {
             whereClause.minWage = 0,
-                whereClause.maxWage = 0
+            whereClause.maxWage = 0
         }
 
         if (workLevelId > 0) {
@@ -107,11 +110,12 @@ exports.getAllJobs = async (cityId, jobTypeId, minExp, maxExp, minWage, workLeve
         }
 
         if (checkEmpty(keyword)) {
+            const lowerKeyword = keyword.toLowerCase();
             whereClause[Op.or] = [
-                { jobTitle: { [Op.like]: `%${keyword}%` } },
-                { jobDescribe: { [Op.like]: `%${keyword}%` } },
-                { jobRequire: { [Op.like]: `%${keyword}%` } },
-                { jobBenefit: { [Op.like]: `%${keyword}%` } }
+                { jobTitle: { [Op.like]: `%${lowerKeyword}%` } },
+                { jobDescribe: { [Op.like]: `%${lowerKeyword}%` } },
+                { jobRequire: { [Op.like]: `%${lowerKeyword}%` } },
+                { jobBenefit: { [Op.like]: `%${lowerKeyword}%` } }
             ];
         }
 

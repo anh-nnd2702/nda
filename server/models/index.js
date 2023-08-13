@@ -75,6 +75,7 @@ Avatar.belongsTo(Candidate, {
 
 Keyword.belongsTo(Candidate, { foreignKey: 'candId', onDelete: 'CASCADE' });
 Candidate.hasMany(Keyword, { foreignKey: 'candId', onDelete: 'CASCADE' });
+Candidate.hasMany(Cv, { foreignKey: 'candId', onDelete: 'CASCADE' });
 
 Cv.belongsTo(Candidate, { foreignKey: 'candId', as: 'candidate' });
 // Kết nối quan hệ với bảng WorkField
@@ -113,6 +114,14 @@ CvActivity.belongsTo(Cv, {
     foreignKey: 'cvId',
     onDelete: 'CASCADE',
 })
+
+Cv.hasMany(CvExperience, {foreignKey: 'cvId', as: 'CvExperience' });
+Cv.hasMany(CvProject, {foreignKey: 'cvId', as: 'CvProject' });
+Cv.hasMany(CvCertificate, {foreignKey: 'cvId', as: 'CvCertificate' });
+Cv.hasMany(CvActivity, {foreignKey: 'cvId', as: 'CvActivity'});
+Cv.hasMany(CvAward, {foreignKey: 'cvId', as: 'CvAward' });
+Cv.hasMany(CvSkill, {foreignKey: 'cvId', as: 'CvSkill' });
+Cv.hasMany(CvEducation, {foreignKey: 'cvId', as: 'CvEducation'});
 
 // Định nghĩa mối quan hệ giữa CVEducation và EducationLevel
 CvEducation.belongsTo(EducationLevel, {

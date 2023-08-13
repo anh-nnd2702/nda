@@ -16,6 +16,7 @@ const refeRoutes = require('./routes/reference.js');
 const applyRoutes = require('./routes/applyJob.js');
 const adminRoutes = require('./routes/admin.js');
 const reportRoutes = require('./routes/reportJob.js');
+const matchRoutes = require('./routes/matchJob.js')
 
 const {cronMatchJob} = require('./controllers/cronJob.js');
 const {cronSchedule} = require('./configs/cronSchedule.js')
@@ -40,6 +41,9 @@ app.use('/reference', refeRoutes);
 app.use('/apply', applyRoutes);
 app.use('/admin', adminRoutes);
 app.use('/report', reportRoutes);
+app.use('/matchJob', matchRoutes);
+
+app.get('/', (req, res)=>res.status(200).json({messsage: "hello world"}))
 
 const domain = require('./configs/domain.js');
 const port = domain.port;
@@ -56,6 +60,7 @@ const io = socketio(server, {
 initializeSocket(io);
 
 cron.schedule(cronSchedule, () => {
+  console.log("cron job running!");
   cronMatchJob();
 });
 

@@ -39,9 +39,6 @@ exports.getAllReport = async () => {
             include: [
                 {
                     model: Job,
-                    where: {
-                        isActive: true,
-                    },
                     attributes: {
                         exclude: ['jobDescribe', 'jobRequire', 'jobBenefit']
                     },
@@ -108,19 +105,20 @@ exports.getReportById = async (reportId) => {
 
 exports.updateReportStatus = async (reportId, newStatus) => {
     try {
-        const reportedJob = ReportJob.findOne({
+        const reportedJob = await ReportJob.findOne({
             where: {
                 reportId
             },
         });
         if (reportedJob) {
             reportedJob.reportStatus = newStatus;
-            const savedReport = await reportedJob.save();
-            return savedReport;
+            await reportedJob.save();
+            return reportedJob;
         }
         else throw new Error("can not find report", error);
     }
     catch (error) {
+        console.log(error);
         throw error;
     }
 

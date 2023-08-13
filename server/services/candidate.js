@@ -116,9 +116,6 @@ exports.getAllCandidateSettings = async () =>{
       include: {
         model: Keyword,
         attributes: ['keywordText'],
-      },
-      where: {
-        isSeeking: true,
       }
     });
     return candidates;
